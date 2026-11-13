@@ -67,8 +67,18 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT]:
             self.rect.x += PLAYER_SPEED
 
+        #플레이어 상하 이동 기능까지 추가
+        if keys[pygame.K_UP]:
+            self.rect.y -= PLAYER_SPEED
+
+        if keys[pygame.K_DOWN]:
+            self.rect.y += PLAYER_SPEED
+
         self.rect.left = max(0, self.rect.left)
         self.rect.right = min(WIDTH, self.rect.right)
+
+        self.rect.top = max(0, self.rect.top)
+        self.rect.bottom = min(HEIGHT, self.rect.bottom)
 
     def shoot(self):
         """플레이어 위쪽 가운데에서 출발하는 총알 하나를 만들어 돌려준다."""
