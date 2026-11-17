@@ -116,7 +116,8 @@ class Game:
         for enemy in list(self.enemies):
             if enemy.rect.top > HEIGHT:
                 enemy.kill()
-                # TODO(F4): 적이 아래로 지나갔으니 생명을 1 줄일 것.
+                
+                self.lives -= 1
 
         # TODO(F4): 생명이 0 이하가 되면 self.end_game() 을 실행할 것.
 
