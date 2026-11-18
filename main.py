@@ -164,7 +164,7 @@ class Game:
         self.screen.blit(self.dark_shade, (0, 0))
         self.draw_text(TITLE, self.big_font, YELLOW, center=(cx, 150))
         self.screen.blit(self.player.image, self.player.image.get_rect(center=(cx, 270)))
-        controls = ("LEFT / RIGHT : Move", "SPACE : Shoot", "R : Restart", "ESC : Quit")
+        controls = ("ARROW KEYS : Move", "SPACE : Shoot", "R : Restart", "ESC : Quit")
         for i, line in enumerate(controls):
             self.draw_text(line, self.font, WHITE, center=(cx, 370 + i * 34))
         if pygame.time.get_ticks() // 500 % 2 == 0:  # 0.5초마다 깜빡임
