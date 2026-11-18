@@ -179,19 +179,29 @@ class Game:
             "GAME OVER",
             gameover_font,
             YELLOW,
-            center = (WIDTH // 2, HEIGHT // 2 - 30)
+            center = (WIDTH // 2, HEIGHT // 2 - 50)
         )
 
         self.draw_text(
             f"SCORE: {self.score}",
             self.font,
             WHITE,
-            center = (WIDTH // 2, HEIGHT // 2 + 30)
+            center = (WIDTH // 2, HEIGHT // 2 + 10)
         )
 
+        self.draw_text(
+            f"HIGH SCORE: {self.high_score}",
+            self.font,
+            WHITE,
+            center = (WIDTH // 2, HEIGHT // 2 + 60)
+        )
 
-        # TODO(F5): 최고 점수("HIGH SCORE: 300")와 재시작 안내("Press R to restart")도 표시할 것.
-        pass
+        self.draw_text(
+            "Press R to Restart",
+            self.font,
+            RED,
+            center = (WIDTH // 2, HEIGHT // 2 + 110)
+        )
 
     # ---------------- 게임 루프 ----------------
     def step(self):
