@@ -15,17 +15,20 @@ SPAWN_ENEMY = pygame.USEREVENT + 1  # "적을 하나 만들 때가 됐다"는 �
 
 def load_high_score():
     """HIGHSCORE_FILE 에서 최고 점수를 읽어 돌려준다."""
-    # TODO(F5): 파일에서 최고 점수를 읽어 int 로 반환할 것.
-    #           파일이 없거나 내용이 숫자가 아니면 0 을 반환할 것.
-    return 0
+    try:
+        with open(HIGHSCORE_FILE, "r", encoding="utf-8") as file:
+            return int(file.read().strip())
+
+    except (FileNotFoundError, ValueError):
+        return 0
 
 
 def save_high_score(score):
     """최고 점수를 HIGHSCORE_FILE 에 저장한다."""
-    # TODO(F5): score 를 파일에 저장할 것. (다음 실행 때 load_high_score() 로 읽을 수 있게)
-    pass
+    with open(HIGHSCORE_FILE, "w", encoding="utf-8") as file:
+        file.write(str(score))
 
-
+    
 class Game:
     def __init__(self):
         pygame.init()
@@ -71,8 +74,7 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                # TODO(F2): 스페이스 키를 누르면 self.player.shoot() 으로 총알을 만들어
-                #           self.bullets 와 self.all_sprites 두 그룹에 넣을 것. (게임 오버 중에는 쏘지 않게)
+                
                 if event.key == pygame.K_SPACE and not self.game_over:
                     bullet = self.player.shoot()
                     self.bullets.add(bullet)
@@ -100,9 +102,6 @@ class Game:
         self.player.update(pygame.key.get_pressed())
         self.bullets.update()
         self.enemies.update()
-
-        # TODO(F3): 총알과 적이 부딪히면 둘 다 없애고, 맞힌 적 하나당 SCORE_PER_ENEMY 점을 더할 것.
-        #           힌트: pygame.sprite.groupcollide
 
         hits = pygame.sprite.groupcollide(self.bullets, self.enemies, True, True)
 
@@ -145,7 +144,7 @@ class Game:
             self.screen.blit(self.dark_shade, (0, 0))  # 게임 오버 글자가 잘 보이게
         self.screen.blit(self.hud_shade, (0, 0))  # 점수·생명 글자 뒤 어두운 띠
         self.draw_text(f"LIVES: {self.lives}", self.font, WHITE, topright=(WIDTH - 10, 10))
-        # TODO(F3): 화면 왼쪽 위에 현재 점수를 "SCORE: 120" 형태로 표시할 것.
+        
         self.draw_text(f"SCORE: {self.score}", self.font, WHITE, topleft = (10, 10))
 
         if self.game_over:
