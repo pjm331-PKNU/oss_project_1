@@ -60,22 +60,29 @@ class Game:
         self.lives = START_LIVES
         self.game_over = False
 
+        self.speed_level = 0
+        self.speedup_until = 0
+
     # ---------------- 입력 ----------------
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+
             elif self.on_title:
                 self.handle_title_event(event)  # 시작 화면 입력은 여기서만 처리
-            elif event.type == SPAWN_ENEMY and not self.game_over:
+
+            elif event.type == SPAWN_ENEMY and not self.game_over and not self.is_speedup_paused():
                 enemy = Enemy()
+                enemy.speed += self.speed_level
                 self.enemies.add(enemy)
                 self.all_sprites.add(enemy)
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
                 
-                if event.key == pygame.K_SPACE and not self.game_over:
+                if event.key == pygame.K_SPACE and not self.game_over and not self.is_speedup_paused():
                     bullet = self.player.shoot()
                     self.bullets.add(bullet)
                     self.all_sprites.add(bullet)
@@ -94,7 +101,7 @@ class Game:
 
     # ---------------- 갱신 ----------------
     def update(self):
-        if self.game_over:
+        if self.game_over or self.is_speedup_paused():
             return  # 게임 오버면 화면(배경 포함)을 멈춤.
 
         self.background.update()
@@ -123,6 +130,12 @@ class Game:
         
         if self.lives <= 0:
             self.end_game()
+
+        if not self.game_over:
+            new_level = self.score // 100
+            if new_level > self.speed_level:
+                self.speed_level = new_level
+                self.speedup_until = pygame.time.get_ticks() + 1500
 
 
     def end_game(self):
@@ -156,6 +169,16 @@ class Game:
 
         if self.game_over:
             self.draw_game_over()
+        
+        if self.is_speedup_paused():
+            self.screen.blit(self.dark_shade, (0, 0))
+            self.draw_text(
+                "SPEED UP!",
+                self.big_font,
+                YELLOW,
+                center = (WIDTH // 2, HEIGHT // 2)
+            )
+
         pygame.display.flip()
 
     def draw_title(self):
@@ -215,6 +238,9 @@ class Game:
             self.clock.tick(FPS)
             self.step()
         pygame.quit()
+
+    def is_speedup_paused(self):
+        return pygame.time.get_ticks() < self.speedup_until
 
 
 if __name__ == "__main__":
