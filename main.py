@@ -79,7 +79,9 @@ class Game:
                     bullet = self.player.shoot()
                     self.bullets.add(bullet)
                     self.all_sprites.add(bullet)
-                # TODO(F5): 게임 오버 상태에서 R 키를 누르면 self.reset() 으로 새 판을 시작할 것.
+                
+                if event.key == pygame.K_r and self.game_over:
+                    self.reset()
 
     def handle_title_event(self, event):
         """시작 화면의 입력: SPACE 면 새 판 시작, ESC 면 종료. (적 생성·발사 없음)"""
@@ -126,8 +128,7 @@ class Game:
     def end_game(self):
         """게임 오버 처리."""
         self.game_over = True
-        # TODO(F5): 이번 점수가 최고 점수보다 높으면 self.high_score 를 바꾸고 save_high_score() 로 저장할 것.
-
+        
         if self.score > self.high_score:
             self.high_score = self.score
             save_high_score(self.high_score)
